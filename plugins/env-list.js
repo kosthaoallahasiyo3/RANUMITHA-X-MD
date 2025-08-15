@@ -36,10 +36,10 @@ cmd({
     react: "⚙️",
     filename: __filename
 }, 
-async (conn, mek, m, { from, quoted, reply, isOwner }) => {
+async (conn, mek, m, { from, quoted, reply, isCreator }) => {
     try {
         // Owner check
-        if (!isOwner) {
+        if (!isCreator) {
             return reply("🚫 *Owner Only Command!*");
         }
 
