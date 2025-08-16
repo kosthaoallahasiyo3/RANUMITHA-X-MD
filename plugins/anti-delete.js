@@ -8,8 +8,8 @@ cmd({
     category: "misc",
     filename: __filename
 },
-async (conn, mek, m, { from, reply, text, isOwner }) => {
-    if (!isOwner) return reply('This command is only for the bot owner');
+async (conn, mek, m, { from, reply, text, isCreator }) => {
+    if (!isCreator) return reply('This command is only for the bot owner');
     
     try {
         const currentStatus = await getAnti();
