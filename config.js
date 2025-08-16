@@ -29,11 +29,11 @@ AUTO_REPLY: process.env.AUTO_REPLY || "true",
 AUTO_REACT: process.env.AUTO_REACT || "false",
 // make this true or false for auto react on all msgs
 AUTO_STATUS_SEEN: process.env.AUTO_STATUS_SEEN || "true",
-// make true or false status auto seen
-AUTO_STATUS_REPLY: process.env.AUTO_STATUS_REPLY || "false",
-// make true if you want auto reply on status 
+// make true or false status auto seen 
 AUTO_STATUS_REACT: process.env.AUTO_STATUS_REACT || "true",
 // make true or false automatic status react
+AUTO_STATUS_REPLY: process.env.AUTO_STATUS_REPLY || "false",
+// make true if you want auto reply on status
 CUSTOM_REACT: process.env.CUSTOM_REACT || "false",
 // make this true for custum emoji react
 ANTI_VV: process.env.ANTI_VV || "true",
