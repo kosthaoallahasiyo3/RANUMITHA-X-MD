@@ -29,6 +29,7 @@ const {
   const ff = require('fluent-ffmpeg')
   const P = require('pino')
   const config = require('./config')
+  const GroupEvents = require('./lib/groupevents');
   const qrcode = require('qrcode-terminal')
   const StickersTypes = require('wa-sticker-formatter')
   const util = require('util')
@@ -42,15 +43,15 @@ const {
   const Crypto = require('crypto')
   const path = require('path')
   const prefix = config.PREFIX
-
-const ownerNumber = ('94762095304');
-
-const tempDir = path.join(os.tmpdir(), 'cache-temp')
-if (!fs.existsSync(tempDir)) {
+  
+  const ownerNumber = ['94762095304']
+  
+  const tempDir = path.join(os.tmpdir(), 'cache-temp')
+  if (!fs.existsSync(tempDir)) {
       fs.mkdirSync(tempDir)
   }
   
-const clearTempDir = () => {
+  const clearTempDir = () => {
       fs.readdir(tempDir, (err, files) => {
           if (err) throw err;
           for (const file of files) {
@@ -63,83 +64,60 @@ const clearTempDir = () => {
   
   // Clear the temp directory every 5 minutes
   setInterval(clearTempDir, 5 * 60 * 1000);
-
-//===================SESSION-AUTH============================
-if (!fs.existsSync(__dirname + "/sessions/creds.json")) {
-  if (!config.SESSION_ID)
-    return console.log("Please add your session to SESSION_ID env !!");
-  const sessdata = config.SESSION_ID.replace("ranu~", '');
-  const filer = File.fromURL(`https://mega.nz/file/${sessdata}`);
-  filer.download((err, data) => {
-    if (err) throw err;
-    fs.writeFile(__dirname + "/sessions/creds.json", data, () => {
-      console.log("Session downloaded ✅");
-    });
-  });
-}
+  
+  //===================SESSION-AUTH============================
+if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
+if(!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
+const sessdata = config.SESSION_ID.replace("ranu~", '');
+const filer = File.fromURL(`https://mega.nz/file/${sessdata}`)
+filer.download((err, data) => {
+if(err) throw err
+fs.writeFile(__dirname + '/sessions/creds.json', data, () => {
+console.log("Session downloaded ✅")
+})})}
 
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 8000;
-
-//=============================================
-
-async function connectToWA() {
-console.log("Connecting 🪄 RANUMITHA 🏮");
-  const { state, saveCreds } = await useMultiFileAuthState(
-    __dirname + "/sessions/"
-  );
-  var { version } = await fetchLatestBaileysVersion();
-
+const port = process.env.PORT || 9090;
+  
+  //=============================================
+  
+  async function connectToWA() {
+  console.log("Connecting to WhatsApp ⏳️...");
+  const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/sessions/')
+  var { version } = await fetchLatestBaileysVersion()
+  
   const conn = makeWASocket({
-    logger: P({ level: "silent" }),
-    printQRInTerminal: false,
-    browser: Browsers.macOS("Firefox"),
-    syncFullHistory: true,
-    auth: state,
-    version,
+          logger: P({ level: 'silent' }),
+          printQRInTerminal: false,
+          browser: Browsers.macOS("Firefox"),
+          syncFullHistory: true,
+          auth: state,
+          version
+          })
+      
+  conn.ev.on('connection.update', (update) => {
+  const { connection, lastDisconnect } = update
+  if (connection === 'close') {
+  if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
+  connectToWA()
+  }
+  } else if (connection === 'open') {
+  console.log('🧬 Installing Plugins')
+  const path = require('path');
+  fs.readdirSync("./plugins/").forEach((plugin) => {
+  if (path.extname(plugin).toLowerCase() == ".js") {
+  require("./plugins/" + plugin);
+  }
   });
-
-
-  conn.ev.on("connection.update", (update) => {
-    const { connection, lastDisconnect } = update;
-    if (connection === "close") {
-      if (
-        lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut
-      ) {
-        connectToWA();
-      }
-    } else if (connection === "open") {
-      console.log(" Installing... ");
-      const path = require("path");
-      fs.readdirSync("./plugins/").forEach((plugin) => {
-        if (path.extname(plugin).toLowerCase() == ".js") {
-          require("./plugins/" + plugin);
-        }
-      });
-      console.log("🪄 RANUMITHA 📥 installed successful ✅");
-      console.log("❤‍🔥 RANUMITHA ❤️ connected to whatsapp ✅");
-
-      let up = `❤‍🔥 RANUMITHA 🌍 connected successful ✅`;
-      let up1 = `Hello RANUMITHA, I made bot successful ☑️✅`;
-
-      conn.sendMessage(ownerNumber + "@s.whatsapp.net", {
-        image: {
-          url: `https://raw.githubusercontent.com/Ranumithaofc/RANU-FILE-S-/refs/heads/main/images/IMG-20250711-WA0010.jpg`,
-        },
-        caption: up,
-      });
-      conn.sendMessage("94762095304@s.whatsapp.net", {
-        image: {
-          url: `https://raw.githubusercontent.com/Ranumithaofc/RANU-FILE-S-/refs/heads/main/images/IMG-20250711-WA0010.jpg`,
-        },
-        caption: up1,
-      });
-    }
-  });
-
-
-conn.ev.on('creds.update', saveCreds)
+  console.log('Plugins installed successful ✅')
+  console.log('Bot connected to whatsapp ✅')
+  
+  let up = `*Hello there WHITESHADOW-MD User! \ud83d\udc4b\ud83c\udffb* \n\n> Simple , Straight Forward But Loaded With Features \ud83c\udf8a, Meet WHITESHADOW-MD WhatsApp Bot.\n\n *Thanks for using WHITESHADOW-MD \ud83d\udea9* \n\n> Join WhatsApp Channel :- ⤵️\n \nhttps://whatsapp.com/channel/0029Vak4dFAHQbSBzyxlGG13\n\n- *YOUR PREFIX:* = ${prefix}\n\nDont forget to follow my channel ⬇️\n\nhttps://github.com\n\n> © Powered BY WHITESHADOW-MD \ud83d\udda4`;
+    conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/4m8iw2.jpg` }, caption: up })
+  }
+  })
+  conn.ev.on('creds.update', saveCreds)
 
   //==============================
 
@@ -175,14 +153,15 @@ conn.ev.on('creds.update', saveCreds)
     }
   if (mek.key && mek.key.remoteJid === 'status@broadcast' && config.AUTO_STATUS_REACT === "true"){
     const jawadlike = await conn.decodeJid(conn.user.id);
-    const emoji = ['💚'];
+    const emojis = ['❤️', '💸', '😇', '🍂', '💥', '💯', '🔥', '💫', '💎', '💗', '🤍', '🖤', '👀', '🙌', '🙆', '🚩', '🥰', '💐', '😎', '🤎', '✅', '🫀', '🧡', '😁', '😄', '🌸', '🕊️', '🌷', '⛅', '🌟', '🗿', '🇵🇰', '💜', '💙', '🌝', '🖤', '💚'];
+    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
     await conn.sendMessage(mek.key.remoteJid, {
       react: {
-        text: emoji,
+        text: randomEmoji,
         key: mek.key,
       } 
     }, { statusJidList: [mek.key.participant, jawadlike] });
-  }                        
+  }                       
   if (mek.key && mek.key.remoteJid === 'status@broadcast' && config.AUTO_STATUS_REPLY === "true"){
   const user = mek.key.participant
   const text = `${config.AUTO_STATUS_MSG}`
@@ -269,8 +248,8 @@ conn.ev.on('creds.update', saveCreds)
 				}
  //================ownerreact==============
     
-if (senderNumber.includes("94762095304") && !isReact) {
-  const reactions = ["👨‍💻"];
+if (senderNumber.includes("94704896880") && !isReact) {
+  const reactions = ["👑", "💀", "📊", "🤫", "🧠", "🎯", "📈", "📝", "🏆", "🌍", "👾", "💗", "❤️", "💥", "🌼", "🏵️", ,"💐", "🔥", "❄️", "🌝", "🌚", "🐥", "📌️"];
   const randomReaction = reactions[Math.floor(Math.random() * reactions.length)];
   m.react(randomReaction);
 }
@@ -294,7 +273,7 @@ if (!isReact && config.AUTO_REACT === 'true') {
         '📑', '📉', '📂', '🔖', '🧷', '📌', '📝', '🔏', '🔐', '🩷', '❤️', '🧡', '💛', '💚', 
         '🩵', '💙', '💜', '🖤', '🩶', '🤍', '🤎', '❤‍🔥', '❤‍🩹', '💗', '💖', '💘', '💝', '❌', 
         '✅', '🔰', '〽️', '🌐', '🌀', '⤴️', '⤵️', '🔴', '🟢', '🟡', '🟠', '🔵', '🟣', '⚫', 
-        '⚪', '🟤', '🔇', '🔊', '📢', '🔕', '♥️', '🕐', '🚩'
+        '⚪', '🟤', '🔇', '🔊', '📢', '🔕', '♥️', '🕐', '🚩', '🇵🇰'
     ];
 
     const randomReaction = reactions[Math.floor(Math.random() * reactions.length)];
@@ -790,7 +769,7 @@ if (!isReact && config.CUSTOM_REACT === 'true') {
   }
   
   app.get("/", (req, res) => {
-  res.send("hey, 🔥RANUMITHA X MD🍃 started✅");
+  res.send("WHITESHADOW-MD STARTED ✅");
   });
   app.listen(port, () => console.log(`Server listening on port http://localhost:${port}`));
   setTimeout(() => {
