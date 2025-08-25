@@ -17,7 +17,7 @@ cmd({
             return reply(`${userJID}`);
     }
             
-     else (isGroup)  {
+     else (!isGroup)  {
             // Ensure group JID ends with @g.us
             const groupJID = from.includes('@g.us') ? from : `${from}@g.us`;
             return reply(`${groupJID}`);
