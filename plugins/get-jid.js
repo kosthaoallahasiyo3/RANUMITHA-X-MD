@@ -1,4 +1,5 @@
 const { cmd } = require('../command');
+const config = require('../config');
 
 cmd({
     pattern: "jid",
@@ -17,7 +18,7 @@ cmd({
             return reply(`${userJID}`);
     }
             
-        if (!isGroup)  {
+        if (!isGroup) {
             // Ensure group JID ends with @g.us
             const groupJID = from.includes('@g.us') ? from : `${from}@g.us`;
             return reply(`${groupJID}`);
