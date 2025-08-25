@@ -1,26 +1,6 @@
 const axios = require('axios');
 const { cmd } = require('../command');
 
-// Fake ChatGPT vCard
-const fakevCard = {
-    key: {
-        fromMe: false,
-        participant: "0@s.whatsapp.net",
-        remoteJid: "status@broadcast"
-    },
-    message: {
-        contactMessage: {
-            displayName: "© Mr Hiruka",
-            vcard: `BEGIN:VCARD
-VERSION:3.0
-FN:Meta
-ORG:META AI;
-TEL;type=CELL;type=VOICE;waid=13135550002:+13135550002
-END:VCARD`
-        }
-    }
-};
-
 cmd({
     pattern: "vcc",
     desc: "🎴 Generate Virtual Credit Cards (VCCs)",
@@ -46,7 +26,7 @@ cmd({
             responseMessage += `📅 *Expiration Date:* ${card.expirationDate}\n`;
             responseMessage += `🧾 *Cardholder Name:* ${card.cardholderName}\n`;
             responseMessage += `🔒 *CVV:* ${card.cvv}\n\n`;
-        }, await conn.sendMessage(from, { quoted: fakevCard });
+        });
 
         return reply(responseMessage);
     } catch (error) {
