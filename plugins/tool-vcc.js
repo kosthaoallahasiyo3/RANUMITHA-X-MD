@@ -45,8 +45,8 @@ cmd({
             responseMessage += `🔢 *Card Number:* ${card.cardNumber}\n`;
             responseMessage += `📅 *Expiration Date:* ${card.expirationDate}\n`;
             responseMessage += `🧾 *Cardholder Name:* ${card.cardholderName}\n`;
-            responseMessage += `🔒 *CVV:* ${card.cvv}\n\n> © Powerd by 𝗥𝗔𝗡𝗨𝗠𝗜𝗧𝗛𝗔-𝗫-𝗠𝗗 🌛`;
-        },{ quoted: fakevCard });
+            responseMessage += `🔒 *CVV:* ${card.cvv}\n\n`;
+        }, await conn.sendMessage(from, { quoted: fakevCard });
 
         return reply(responseMessage);
     } catch (error) {
