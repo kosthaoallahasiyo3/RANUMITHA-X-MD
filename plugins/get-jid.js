@@ -14,13 +14,13 @@ cmd({
         if (!q) {
             // Ensure user JID ends with @s.whatsapp.net
             const userJID = sender.includes('@s.whatsapp.net') ? sender : `${sender}@s.whatsapp.net`;
-            return reply(`👤 *User JID:*\n\`\`\`${userJID}\`\`\``);
+            return reply(`${userJID}`);
     }
             
      else   {
             // Ensure group JID ends with @g.us
             const groupJID = from.includes('@g.us') ? from : `${from}@g.us`;
-            return reply(`👥 *Group JID:*\n\`\`\`${groupJID}\`\`\``);
+            return reply(`${groupJID}`);
         } 
             
 
