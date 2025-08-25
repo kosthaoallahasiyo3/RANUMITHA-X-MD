@@ -9,10 +9,10 @@ cmd({
     category: "utility",
     filename: __filename,
 }, async (conn, mek, m, { 
-    from, isGroup, isCreator, reply, sender 
+    from, isGroup, q, reply, sender 
 }) => {
     try {
-        if (isGroup) {
+        if (!q),(!isGroup) {
             // Ensure group JID ends with @g.us
             const groupJID = from.includes('@g.us') ? from : `${from}@g.us`;
             return reply(`${groupJID}`);
