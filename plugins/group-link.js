@@ -39,7 +39,7 @@ cmd({
         const inviteLink = `https://chat.whatsapp.com/${inviteCode}`;
 
         // Reply with the invite link
-        return reply(`*🔖 Group link 🖇️*\n\n${inviteLink}\n\n> © Powerd by 𝗥𝗔𝗡𝗨𝗠𝗜𝗧𝗛𝗔-𝗫-𝗠𝗗 🌛`);
+        return reply(`*🔖 Group link 🖇️*\n\n${inviteLink}\n`);
         
     } catch (error) {
         console.error("Error in invite command:", error);
