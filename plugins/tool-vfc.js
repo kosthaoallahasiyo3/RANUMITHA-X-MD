@@ -58,7 +58,7 @@ cmd({
             document: fs.readFileSync(nmfilect), 
             mimetype: 'text/vcard', 
             fileName: 'Nexus.vcf', 
-            caption: `\nDone saving.\nGroup Name: *${cmiggc.subject}*\nContacts: *${cmiggc.participants.length}*\n> © Powerd by 𝗥𝗔𝗡𝗨𝗠𝗜𝗧𝗛𝗔-𝗫-𝗠𝗗 🌛`}, { quoted: fakevCard });
+            caption: `\nDone saving.\nGroup Name: *${cmiggc.subject}*\nContacts: *${cmiggc.participants.length}*\n\n> © Powerd by 𝗥𝗔𝗡𝗨𝗠𝗜𝗧𝗛𝗔-𝗫-𝗠𝗗 🌛`}, { quoted: fakevCard });
 
         fs.unlinkSync(nmfilect); // Cleanup the file after sending
     } catch (err) {
