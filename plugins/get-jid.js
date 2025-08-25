@@ -17,7 +17,7 @@ cmd({
             return reply(`👤 *User JID:*\n\`\`\`${userJID}\`\`\``);
     }
             
-        await (!isGroup) {
+     else   {
             // Ensure group JID ends with @g.us
             const groupJID = from.includes('@g.us') ? from : `${from}@g.us`;
             return reply(`👥 *Group JID:*\n\`\`\`${groupJID}\`\`\``);
