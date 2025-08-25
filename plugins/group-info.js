@@ -14,7 +14,7 @@ const fakevCard = {
             displayName: "© Mr Hiruka",
             vcard: `BEGIN:VCARD
 VERSION:3.0
-FN:Meta
+FN:AI
 ORG:META AI;
 TEL;type=CELL;type=VOICE;waid=13135550002:+13135550002
 END:VCARD`
