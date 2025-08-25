@@ -6,26 +6,6 @@ const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, sleep, fetchJson
 const { writeFileSync } = require('fs');
 const path = require('path');
 
-// Fake ChatGPT vCard
-const fakevCard = {
-    key: {
-        fromMe: false,
-        participant: "0@s.whatsapp.net",
-        remoteJid: "status@broadcast"
-    },
-    message: {
-        contactMessage: {
-            displayName: "© Mr Hiruka",
-            vcard: `BEGIN:VCARD
-VERSION:3.0
-FN:Meta
-ORG:META AI;
-TEL;type=CELL;type=VOICE;waid=13135550002:+13135550002
-END:VCARD`
-        }
-    }
-};
-
 cmd({
     pattern: "invite",
     alias: ["glink", "grouplink"],
@@ -61,10 +41,7 @@ cmd({
         // Reply with the invite link
         return reply(`*🔖 Group link 🖇️*\n\n${inviteLink}\n\n> © Powerd by 𝗥𝗔𝗡𝗨𝗠𝗜𝗧𝗛𝗔-𝗫-𝗠𝗗 🌛`);
         
-    }
-   await conn.sendMessage(from,{image:{url: ppUrl },caption: gdata },{quoted:fakevCard })
-} 
-      catch (error) {
+    } catch (error) {
         console.error("Error in invite command:", error);
         reply(`An error occurred: ${error.message || "Unknown error"}`);
     }
