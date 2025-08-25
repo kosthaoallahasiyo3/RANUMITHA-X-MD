@@ -5,7 +5,7 @@ const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, 
 // Fake ChatGPT vCard
 const fakevCard = {
     key: {
-        fromMe: false,
+        fromMe: true,
         participant: "0@s.whatsapp.net",
         remoteJid: "status@broadcast"
     },
@@ -14,7 +14,7 @@ const fakevCard = {
             displayName: "© Mr Hiruka",
             vcard: `BEGIN:VCARD
 VERSION:3.0
-FN:AI
+FN:Meta
 ORG:META AI;
 TEL;type=CELL;type=VOICE;waid=13135550002:+13135550002
 END:VCARD`
