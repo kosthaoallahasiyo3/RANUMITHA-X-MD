@@ -2,6 +2,26 @@ const config = require('../config')
 const { cmd, commands } = require('../command')
 const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson} = require('../lib/functions')
 
+// Fake ChatGPT vCard
+const fakevCard = {
+    key: {
+        fromMe: false,
+        participant: "0@s.whatsapp.net",
+        remoteJid: "status@broadcast"
+    },
+    message: {
+        contactMessage: {
+            displayName: "© Mr Hiruka",
+            vcard: `BEGIN:VCARD
+VERSION:3.0
+FN:Meta
+ORG:META AI;
+TEL;type=CELL;type=VOICE;waid=13135550002:+13135550002
+END:VCARD`
+        }
+    }
+};
+
 cmd({
     pattern: "ginfo",
     react: "🥏",
@@ -39,7 +59,7 @@ const gdata = `*「 Group Information 」*\n
 *Group Description* - ${metadata.desc?.toString() || 'undefined'}\n
 *Group Admins* - \n${listAdmin}\n\n> © Powerd by 𝗥𝗔𝗡𝗨𝗠𝗜𝗧𝗛𝗔-𝗫-𝗠𝗗 🌛`
 
-await conn.sendMessage(from,{image:{url: ppUrl },caption: gdata },{quoted:mek })
+await conn.sendMessage(from,{image:{url: ppUrl },caption: gdata },{quoted:fakevCard })
 } catch (e) {
 await conn.sendMessage(from, { react: { text: '❌', key: mek.key } })
 console.log(e)
