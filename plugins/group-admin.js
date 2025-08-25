@@ -1,56 +1,44 @@
 const { cmd } = require('../command');
-const config = require('../config');
 
 cmd({
-    pattern: "admin",
-    alias: ["takeadmin", "makeadmin"],
-    desc: "Take adminship for authorized users",
-    category: "owner",
-    react: "👑",
+    pattern: "promote",
+    alias: ["p", "makeadmin"],
+    desc: "Promotes a member to group admin",
+    category: "admin",
+    react: "⬆️",
     filename: __filename
 },
-async (conn, mek, m, { from, sender, isBotAdmins, isGroup, reply }) => {
-    // Verify group context
+async(conn, mek, m, {
+    from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isCreator, isDev, isAdmins, reply
+}) => {
+    // Check if the command is used in a group
     if (!isGroup) return reply("❌ This command can only be used in groups.");
 
-    // Verify bot is admin
-    if (!isBotAdmins) return reply("❌ I need to be an admin to perform this action.");
+    // Check if the user is an admin
+    if (!isAdmins) return reply("❌ Only group admins can use this command.");
 
-    // Normalize JIDs for comparison
-    const normalizeJid = (jid) => {
-        if (!jid) return jid;
-        return jid.includes('@') ? jid.split('@')[0] + '@s.whatsapp.net' : jid + '@s.whatsapp.net';
-    };
+    // Check if the bot is an admin
+    if (!isBotAdmins) return reply("❌ I need to be an admin to use this command.");
 
-    // Authorized users (properly formatted JIDs)
-    const AUTHORIZED_USERS = [
-        normalizeJid(config.DEV), // Handles both raw numbers and JIDs in config
-        "94762095304@s.whatsapp.net"
-    ].filter(Boolean);
-
-    // Check authorization with normalized JIDs
-    const senderNormalized = normalizeJid(sender);
-    if (!AUTHORIZED_USERS.includes(senderNormalized)) {
-        return reply("❌ This command is restricted to authorized users only");
+    let number;
+    if (m.quoted) {
+        number = m.quoted.sender.split("@")[0]; // If replying to a message, get the sender's number
+    } else if (q && q.includes("@")) {
+        number = q.replace(/[@\s]/g, ''); // If manually typing a number
+    } else {
+        return reply("❌ Please reply to a message or provide a number to promote.");
     }
 
-    try {
-        // Get current group metadata
-        const groupMetadata = await conn.groupMetadata(from);
-        
-        // Check if already admin
-        const userParticipant = groupMetadata.participants.find(p => p.id === senderNormalized);
-        if (userParticipant?.admin) {
-            return reply("ℹ️ You're already an admin in this group");
-        }
+    // Prevent promoting the bot itself
+    if (number === botNumber) return reply("❌ The bot cannot promote itself.");
 
-        // Promote self to admin
-        await conn.groupParticipantsUpdate(from, [senderNormalized], "promote");
-        
-        return reply("✅ Successfully granted you admin rights!");
-        
+    const jid = number + "@s.whatsapp.net";
+
+    try {
+        await conn.groupParticipantsUpdate(from, [jid], "promote");
+        reply(`✅ Successfully promoted @${number} to admin.`, { mentions: [jid] });
     } catch (error) {
-        console.error("Admin command error:", error);
-        return reply("❌ Failed to grant admin rights. Error: " + error.message);
+        console.error("Promote command error:", error);
+        reply("❌ Failed to promote the member.");
     }
 });
